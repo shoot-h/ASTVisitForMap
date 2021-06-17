@@ -53,7 +53,8 @@ public class VisiterForTutorial extends ASTVisitor {
             	//System.out.println(node.arguments().get(0).toString());
             	for(int j = 0;j < vernamestock.size();j++) {
                 	if(node.arguments().size() != 0 && node.arguments().get(0).toString().equals(vernamestock.get(j))) {
-                    	System.out.println(verTypestock.get(node.arguments().get(0).toString()));
+                    	System.out.println("Line" + compilationUnit.getLineNumber(node.getStartPosition())
+                    			+ " use " + verTypestock.get(node.arguments().get(0).toString()));
                 	}
             	}
         	}
