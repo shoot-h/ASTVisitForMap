@@ -21,7 +21,7 @@ public class VisiterForTutorial extends ASTVisitor {
         this.compilationUnit = compilationUnit;
     }
     
-    public boolean visit(VariableDeclarationFragment node) {
+    /*public boolean visit(VariableDeclarationFragment node) {
     	if(verjudge == 2) {
     		mapnamestock.add(node.getName().toString());
     		//System.out.println(node.getName());
@@ -33,35 +33,42 @@ public class VisiterForTutorial extends ASTVisitor {
         
         verjudge = 0;
         return false; // do not continue to avoid usage info
-    }
+    }*/
     
     public boolean visit(VariableDeclarationStatement node) {
-    	if(node.getType().toString().contains("Map<")) {
-    		//System.out.println(node.getType());
+    	if(node.getType().toString().contains("Map")) {
+    		System.out.println(node.getType());
     		verjudge = 2;
     	}
     	else verjudge = 1;
+    	//System.out.println(node.getType());
     	verType = node.getType().toString();
     	return true; // do not continue to avoid usage info
+    	
     }
     
     	//((MethodInvocation)map1).arguments().get(0);
 
-    public boolean visit(MethodInvocation node) {
+    /*public boolean visit(MethodInvocation node) {
     	for(int i = 0;i < mapnamestock.size();i++) {
+    		
+    		if(node.getExpression() != null) {
+    			//System.out.println("Line" + compilationUnit.getLineNumber(node.getStartPosition()));
+    			//System.out.println(node.getExpression());
         	if(node.getExpression().toString().equals(mapnamestock.get(i))) {
             	//System.out.println(node.arguments().get(0).toString());
             	for(int j = 0;j < vernamestock.size();j++) {
                 	if(node.arguments().size() != 0 && node.arguments().get(0).toString().equals(vernamestock.get(j))) {
-                    	System.out.println("Line" + compilationUnit.getLineNumber(node.getStartPosition())
-                    			+ " use " + verTypestock.get(node.arguments().get(0).toString()));
+                    	//System.out.println("Line" + compilationUnit.getLineNumber(node.getStartPosition())
+                    	//		+ " use " + verTypestock.get(node.arguments().get(0).toString()));
                 	}
             	}
+        	}
         	}
     	}
 
     	return true;
-    }
+    }*/
     
     
 }
