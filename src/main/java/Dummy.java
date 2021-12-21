@@ -2,6 +2,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Dummy {
+	static String d;
     public void test() {
         int a;
         a = 2;

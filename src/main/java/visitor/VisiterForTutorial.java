@@ -12,13 +12,36 @@ import java.util.Map;
 
 public class VisiterForTutorial extends ASTVisitor {
     CompilationUnit compilationUnit = null;
+    String rootPath = "";
     ArrayList<String> mapnamestock = new ArrayList<>();//Save Veriable Name(Only Type:Map) 
     ArrayList<String> vernamestock = new ArrayList<>();//Save Veriable Name(ALL)
     Map<String,String> verTypestock = new HashMap<>();//Save Type for each Variable
     int verjudge = 0;
     String verType;
+    
     public VisiterForTutorial(CompilationUnit compilationUnit){
         this.compilationUnit = compilationUnit;
+    }
+    
+    public VisiterForTutorial(CompilationUnit compilationUnit,String pathname){
+        this.compilationUnit = compilationUnit;
+        this.rootPath = pathname;
+    }
+    
+    /*public boolean visit(TypeDeclaration node) {
+        //PrintUtil.printTitle("クラス宣言");
+        //ITypeBinding typeBinding = node.resolveBinding();// 詳細な情報をITypeBindingインスタンスを使って取得したい
+        //ITypeBinding superClass = typeBinding.getSuperclass();// 親クラスの取得
+        //ITypeBinding[] interfaces = typeBinding.getInterfaces();// インターフェースの取得
+        //String className = typeBinding.getBinaryName();// クラス名の取得
+        //int modifiers = typeBinding.getModifiers();// "public static"とかの識別子
+        //PrintUtil.printMessage("ClassName", className);
+        //PrintUtil.printModifiers("Modifiers", modifiers);
+        //PrintUtil.printMessage("SuperClass", superClass.getBinaryName());
+        //PrintUtil.printMessage("Interfaces", interfaces);
+    	System.out.println(node.getSuperclassType());
+    	System.out.println(node.getName());
+        return super.visit(node);
     }
     
     /*public boolean visit(VariableDeclarationFragment node) {
@@ -36,9 +59,8 @@ public class VisiterForTutorial extends ASTVisitor {
     }*/
     
     public boolean visit(VariableDeclarationStatement node) {
-    	if(node.getType().toString().contains("Map")) {
-    		System.out.println(node.getType());
-    		verjudge = 2;
+    	if(node.getType().toString().contains("Map<") && !node.getType().toString().contains("Map<String,")) {
+    		System.out.println(node.getType() + " in " + rootPath);
     	}
     	else verjudge = 1;
     	//System.out.println(node.getType());
@@ -46,6 +68,16 @@ public class VisiterForTutorial extends ASTVisitor {
     	return true; // do not continue to avoid usage info
     	
     }
+
+	@Override
+	public boolean visit(FieldDeclaration node) {
+    	if(node.getType().toString().contains("Map<") && !node.getType().toString().contains("Map<String,")) {
+    		System.out.println(node.getType() + "\t\tin " + rootPath);
+    	}
+		// TODO Auto-generated method stub
+		return super.visit(node);
+	}
+    
     
     	//((MethodInvocation)map1).arguments().get(0);
 
