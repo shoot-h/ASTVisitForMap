@@ -1,3 +1,4 @@
+
 package visitor;
 
 import org.eclipse.core.internal.localstore.Bucket;
@@ -13,11 +14,13 @@ import java.util.Map;
 public class VisiterForTutorial extends ASTVisitor {
     CompilationUnit compilationUnit = null;
     String rootPath = "";
-    ArrayList<String> mapnamestock = new ArrayList<>();//Save Veriable Name(Only Type:Map) 
-    ArrayList<String> vernamestock = new ArrayList<>();//Save Veriable Name(ALL)
-    Map<String,String> verTypestock = new HashMap<>();//Save Type for each Variable
+    boolean isset = true;
+    //ArrayList<String> mapnamestock = new ArrayList<>();//Save Veriable Name(Only Type:Map) 
+    //ArrayList<String> vernamestock = new ArrayList<>();//Save Veriable Name(ALL)
+    //Map<String,String> verTypestock = new HashMap<>();//Save Type for each Variable
     int verjudge = 0;
-    String verType;
+    int valiableCounter;
+    //String verType;
     
     public VisiterForTutorial(CompilationUnit compilationUnit){
         this.compilationUnit = compilationUnit;
@@ -28,6 +31,20 @@ public class VisiterForTutorial extends ASTVisitor {
         this.rootPath = pathname;
     }
     
+    public VisiterForTutorial(CompilationUnit compilationUnit,String pathname, boolean bool){
+        this.compilationUnit = compilationUnit;
+        this.rootPath = pathname;
+        this.isset = bool;
+    }
+    
+    public boolean judge(String string) {
+    	if(isset) {
+    	return Setbool(string);
+    	}
+    	else {
+    	return Mapbool(string);
+    	}
+    }
     /*public boolean visit(TypeDeclaration node) {
         //PrintUtil.printTitle("クラス宣言");
         //ITypeBinding typeBinding = node.resolveBinding();// 詳細な情報をITypeBindingインスタンスを使って取得したい
@@ -59,25 +76,71 @@ public class VisiterForTutorial extends ASTVisitor {
     }*/
     
     public boolean visit(VariableDeclarationStatement node) {
-    	if(node.getType().toString().contains("Map<") && !node.getType().toString().contains("Map<String,")) {
-    		System.out.println(node.getType() + " in " + rootPath);
+    	if(judge(node.getType().toString())) {
+    		
+    		if(!rootPath.contains("/test/")) {
+    			System.out.println(node.getType() + "\tin " + rootPath);
+    			//valiableCounter++;
+    		}
     	}
-    	else verjudge = 1;
+    	//else verjudge = 1;
     	//System.out.println(node.getType());
-    	verType = node.getType().toString();
+    	//verType = node.getType().toString();
     	return true; // do not continue to avoid usage info
     	
     }
+    
+    //public boolean visit(VariableDeclarationFragment node) {
+    //	if(node.toString().contains("Set<") && !node.toString().contains("Set<String")
+    //			&& !node.toString().contains("Set<Long")
+    //			&& !node.toString().contains("Set<Integer")) {
+    //		
+    //		if(!rootPath.contains("/test/")) {
+    //			System.out.println(node.getName() + "\tin " + rootPath);
+    //			valiableCounter++;
+    //		}
+    //	}
+    //	else verjudge = 1;
+    //	//System.out.println(node.getType());
+    //	return true; // do not continue to avoid usage info
+    //	
+    //}
 
 	@Override
 	public boolean visit(FieldDeclaration node) {
-    	if(node.getType().toString().contains("Map<") && !node.getType().toString().contains("Map<String,")) {
-    		System.out.println(node.getType() + "\t\tin " + rootPath);
+    	if(judge(node.getType().toString())) {
+    		if(!rootPath.contains("/test/")) {
+    			System.out.println(node.getType() + "\tin " + rootPath);
+    			//valiableCounter++;
+    		}
     	}
 		// TODO Auto-generated method stub
 		return super.visit(node);
 	}
     
+	public boolean Setbool(String nodestring) {
+		if(nodestring.startsWith("Set<") || nodestring.startsWith("HashSet<")
+				|| nodestring.contains(".Set<") || nodestring.contains(".HashSet<")) {
+			if(!nodestring.contains("Set<String")
+			&& !nodestring.contains("Set<Long")
+			&& !nodestring.contains("Set<Integer")) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean Mapbool(String nodestring) {
+		if(nodestring.startsWith("Map<") || nodestring.startsWith("HashMap<")
+				|| nodestring.contains(".Map<") || nodestring.contains(".Map<")) {
+			if(!nodestring.contains("Map<String")
+			&& !nodestring.contains("Map<Long")
+			&& !nodestring.contains("Map<Integer")) {
+				return true;
+			}
+		}
+		return false;
+	}
     
     	//((MethodInvocation)map1).arguments().get(0);
 
